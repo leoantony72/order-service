@@ -19,16 +19,32 @@ export const getOrders = async () => {
       //values
       let obj = JSON.parse(message.value);
       let date_created = new Date();
+      let items = obj.succeeded;
+      let total = obj.amount / 100;
       await prisma.orders.create({
         data: {
           order_id: obj.order_id,
           customer_id: obj.customer_id,
-          total: obj.amount,
+          total: total,
           billing_address_id: obj.billing_address_id,
           order_status: obj.order_status,
           payment_type: obj.payment_type,
           date_created: date_created,
         },
+      });
+      items.forEach(async (item: any) => {
+        let order_itemID = await OrderId();
+        let quantity: number = item.quantity;
+        console.log("Quantity :" + quantity);
+        console.log("Item :" + item.pid);
+        const create_order_Item = await prisma.order_items.create({
+          data: {
+            order_item_id: order_itemID,
+            order_id: obj.order_id,
+            item_id: item.pid,
+            item_quantity: quantity,
+          },
+        });
       });
     },
   });
