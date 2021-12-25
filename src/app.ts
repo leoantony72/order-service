@@ -3,8 +3,6 @@ const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT!;
 const { getOrders } = require("./controller/orders");
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 
 
 
